@@ -22,9 +22,29 @@ app.config([
                 resolve: {
                     post: ['$stateParams', 'postsService',
                         function ($stateParams, postsService) {
-                            return posts.get($stateParams.id);
+                            return postsService.get($stateParams.id);
                         }]
                 }
+            })
+            .state('login', {
+                url: '/login',
+                templateUrl: '/login.html',
+                controller: 'AuthController',
+                onEnter: ['$state', 'authService', function ($state, authService) {
+                    if (authService.isLoggedIn()) {
+                        $state.go('home');
+                    }
+                }]
+            })
+            .state('register', {
+                url: '/register',
+                templateUrl: '/register.html',
+                controller: 'AuthController',
+                onEnter: ['$state', 'authService', function ($state, authService) {
+                    if (authService.isLoggedIn()) {
+                        $state.go('home');
+                    }
+                }]
             });
 
 

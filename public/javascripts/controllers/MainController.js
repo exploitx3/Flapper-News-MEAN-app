@@ -1,8 +1,10 @@
 app.controller('MainController', [
     '$scope',
     'postsService',
-    function ($scope, postsService) {
+    'authService',
+    function ($scope, postsService, authService) {
         $scope.posts = postsService.posts;
+        $scope.isLoggedIn = authService.isLoggedIn;
 
         $scope.incrementUpvotes = function (post) {
             postsService.upvote(post);

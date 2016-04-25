@@ -5,8 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
 require('./models/Posts.js');
 require('./models/Comments.js');
+require('./models/User.js');
+require('./config/passport.js');
 mongoose.connect('mongodb://localhost/news');
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -24,6 +27,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(passport.initialize());
 
 app.use('/', routes);
 app.use('/users', users);

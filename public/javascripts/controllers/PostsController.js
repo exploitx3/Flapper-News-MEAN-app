@@ -1,19 +1,29 @@
 app.controller('PostsController', [
     '$scope',
-    '$stateParams',
     'postsService',
-    function($scope, $stateParams, postsService){
-        $scope.post = postsService.posts[$stateParams.id];
+    'authService',
+    'post',
+    function($scope, postsService, authService, post){
+        $scope.post = post;
+        $scope.isLoggedIn = authService.isLoggedIn;
+
         $scope.addComment = function () {
             if($scope.body === ''){
                 return;
             }
-            $scope.post.comments.push({
+            postsService.addComment(post._id, {
                 body: $scope.body,
-                author: 'user',
-                upvotes: 0
+                author: 'user'
+            }).success(function (comment) {
+                $scope.post.comments.push(comment);
             });
+
             $scope.body = '';
+        };
+
+        $scope.incrementUpvotes = function (comment) {
+            postsService.upvoteComment(post, comment);
         }
+
     }
 ]);

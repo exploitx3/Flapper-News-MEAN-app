@@ -1,5 +1,7 @@
-app.factory('postsService', ['$http',
-    function ($http) {
+app.factory('postsService', [
+    '$http',
+    'authService',
+    function ($http, authService) {
         var result = {};
         result.getAll = function () {
             return $http.get('/posts')
@@ -9,13 +11,17 @@ app.factory('postsService', ['$http',
                 })
         };
         result.create = function (post) {
-            return $http.post('/posts', post)
+            return $http.post('/posts', post,{
+                headers: {Authorization: 'Bearer ' + authService.getToken()}
+            })
                 .success(function (data) {
                     result.posts.push(data);
                 });
         };
         result.upvote = function (post) {
-            return $http.put('/posts/' + post._id + '/upvote')
+            return $http.put('/posts/' + post._id + '/upvote', null,{
+                    headers: {Authorization: 'Bearer ' + authService.getToken()}
+                })
                 .success(function (data) {
                     post.upvotes += 1;
                 });
@@ -26,6 +32,21 @@ app.factory('postsService', ['$http',
                 .then(function (res) {
                     return res.data;
                 })
+        };
+
+        result.addComment = function (id, comment) {
+            return $http.post('/posts/' + id + '/comments', comment,{
+                headers: {Authorization: 'Bearer ' + authService.getToken()}
+            });
+        };
+
+        result.upvoteComment = function (post, comment) {
+            return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote', null,{
+                    headers: {Authorization: 'Bearer ' + authService.getToken()}
+                })
+            .success(function (data) {
+                comment.upvotes += 1;
+            });
         };
 
         return result;
