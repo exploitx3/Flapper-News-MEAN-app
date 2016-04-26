@@ -28,7 +28,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e1a955fe891bad8cbb74eba86f00f670531d256f
 app.use(passport.initialize());
 
 app.use('/', routes);
